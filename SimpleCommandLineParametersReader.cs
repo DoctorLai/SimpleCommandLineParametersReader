@@ -1,3 +1,7 @@
+/*
+    Author: https://helloacm.com
+    Free to Use, donation is appreciated:  https://helloacm.com/out/paypal
+*/
 using System;
 using System.Collections.Generic;
 

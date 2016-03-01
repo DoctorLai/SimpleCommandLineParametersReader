@@ -13,7 +13,7 @@ namespace CommandLineParametersReader
         private string[] _args { get; }
         private Dictionary<string, string> _dict { get; }
 
-        public bool CaseSensitive { get; set; }
+        private bool CaseSensitive { get; set; }
 
         public CommandLineParametersReader(string[] args, bool isCaseSesnive = false)
         {
@@ -48,8 +48,7 @@ namespace CommandLineParametersReader
         // Return the Key
         public string Get(string key)
         {
-            if (CaseSensitive) { key = key.ToLower(); }
-            return _dict.ContainsKey(key) ? _dict[key] : "";
+            return Get(key, "");
         }
 
         // Return the Key with a default value

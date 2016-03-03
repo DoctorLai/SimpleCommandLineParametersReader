@@ -9,49 +9,41 @@
 
 using namespace std;
 
-SimpleCommandLineReader::SimpleCommandLineReader(int argc, char** argv): SimpleCommandLineReader(argc, argv, false)  {
+SimpleCommandLineReader::SimpleCommandLineReader(int argc, const char** argv): SimpleCommandLineReader(argc, argv, false)  {
 
 };
 
-SimpleCommandLineReader::SimpleCommandLineReader(int argc, char** argv, bool sensitive){
-    _caseSensitive = sensitive;
+SimpleCommandLineReader::SimpleCommandLineReader(int argc, const char** argv, bool sensitive) : _caseSensitive(sensitive) {
     for (int i = 0; i < argc; i ++) {
-        string cur(argv[i]);
-        _args.push_back(cur);
+        process(argv[i]);
     }
-    process();
 };
 
-void SimpleCommandLineReader::process(void) {
-    for (int i = 0; i < _args.size(); i ++) {
-        string cur = _args[i];
-        string key = "";
-        string val = "";
-        for (int j = 0; j < cur.length(); j ++) {
-            if (cur[j] == SepChar) {
-                key = cur.substr(0, j);
-                val = cur.substr(j + 1);
-                break;
-            }
-        }
-        if (!_caseSensitive) {
-            std::transform(key.begin(), key.end(), key.begin(), ::tolower);
-        }
-        _dict[key] = val;
+void SimpleCommandLineReader::process(const string& arg) {
+    
+    auto sepPos = arg.find(SepChar);
+    if(sepPos != string::npos) {
+        auto key = arg.substr(0, sepPos);
+        _dict[uniformString(key)] = arg.substr(sepPos + 1);
     }
 }
 
-string SimpleCommandLineReader::Get(string key) {
-    return Get(key, "");
+const string& SimpleCommandLineReader::Get(const string& key) const {
+    try {
+        return _dict.at(uniformString(key));
+    } catch (out_of_range&) {
+        throw runtime_error("No such key");
+    }
 }
 
-string SimpleCommandLineReader::Get(string key, string default_value) {
-    if (!_caseSensitive) {
-        std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+string SimpleCommandLineReader::Get(const string& key, const string& default_value) const noexcept {
+    try
+    {
+        return Get(key);
     }
-    if (_dict.count(key) > 0) {
-        return _dict[key];
+    catch(runtime_error&)
+    {
+        return default_value;
     }
-    return default_value;
 }
 

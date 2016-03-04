@@ -6,21 +6,31 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
 class SimpleCommandLineReader {
 public:
-    SimpleCommandLineReader(int, char**);
-    SimpleCommandLineReader(int, char**, bool);
-    string Get(string);
-    string Get(string, string);
+    SimpleCommandLineReader(int, const char**);
+    SimpleCommandLineReader(int, const char**, bool);
+    const string& Get(const string&) const;
+    string Get(const string&, const string&) const noexcept;
 
 private:
     const char SepChar = '=';
-    vector<string> _args;
     map<string, string> _dict;
     bool _caseSensitive = false;
-    void process(void);
+    
+    void process(const string& arg);
+    
+    string uniformString(const string& val) const
+    {
+        string result(val);
+        if(!_caseSensitive) {
+            std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+        }
+        return result;
+    }
 };
 

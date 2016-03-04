@@ -14,7 +14,8 @@ SimpleCommandLineReader::SimpleCommandLineReader(int argc, const char** argv): S
 };
 
 SimpleCommandLineReader::SimpleCommandLineReader(int argc, const char** argv, bool sensitive) : _caseSensitive(sensitive) {
-    for (int i = 0; i < argc; i ++) {
+    // argv[0] can be skipped
+    for (int i = 1; i < argc; i ++) {
         process(argv[i]);
     }
 };
@@ -32,17 +33,15 @@ const string& SimpleCommandLineReader::Get(const string& key) const {
     try {
         return _dict.at(uniformString(key));
     } catch (out_of_range&) {
-        throw runtime_error("No such key");
+        return string(); // Better throw runtime error here
     }
 }
 
 string SimpleCommandLineReader::Get(const string& key, const string& default_value) const noexcept {
-    try
-    {
+    try {
         return Get(key);
     }
-    catch(runtime_error&)
-    {
+    catch(out_of_range&) {
         return default_value;
     }
 }

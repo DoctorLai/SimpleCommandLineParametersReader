@@ -33,7 +33,7 @@ const string& SimpleCommandLineReader::Get(const string& key) const {
     try {
         return _dict.at(uniformString(key));
     } catch (out_of_range&) {
-        return string(); // Better throw runtime error here
+        throw runtime_error("No such value");
     }
 }
 

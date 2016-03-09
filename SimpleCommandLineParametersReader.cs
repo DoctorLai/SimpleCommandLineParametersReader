@@ -1,19 +1,19 @@
 /*
-    Author: https://helloacm.com
-    Free to Use, donation is appreciated:  https://helloacm.com/out/paypal
+    Author: Steak Over Cooked
+    Donation appreciated: https://helloacm.com/out/paypal
 */
 using System;
 using System.Collections.Generic;
 
-namespace CommandLineParametersReader
+namespace CommandLineUtilities
 {
-    public class SimpleCommandLineParametersReader
+    public class CommandLineParametersReader
     {       
         private readonly char SepChar = '=';
         private string[] _args { get; }
         private Dictionary<string, string> _dict { get; }
 
-        private bool CaseSensitive { get; set; }
+        private bool CaseSensitive { get; }
 
         public CommandLineParametersReader(string[] args, bool isCaseSesnive = false)
         {
@@ -36,7 +36,7 @@ namespace CommandLineParametersReader
                 var ss = s.Split(new []{ SepChar }, 2, StringSplitOptions.RemoveEmptyEntries);
                 if (ss.Length <= 0) continue;
                 var key = ss[0];
-                if (CaseSensitive)
+                if (!CaseSensitive)
                 {
                     key = key.ToLower();
                 }
@@ -45,16 +45,10 @@ namespace CommandLineParametersReader
             }
         }
 
-        // Return the Key
-        public string Get(string key)
-        {
-            return Get(key, "");
-        }
-
         // Return the Key with a default value
-        public string Get(string key, string defaultvalue)
+        public string Get(string key, string defaultvalue = "")
         {
-            if (CaseSensitive) { key = key.ToLower();}
+            if (!CaseSensitive) { key = key.ToLower();}
             return _dict.ContainsKey(key) ? _dict[key] : defaultvalue;
         }
     }

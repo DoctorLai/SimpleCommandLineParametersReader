@@ -34,7 +34,7 @@ namespace CommandLineUtilities
             {
                 var s = arg.Trim();
                 var ss = s.Split(new []{ SepChar }, 2, StringSplitOptions.RemoveEmptyEntries);
-                if (ss.Length <= 0) continue;
+                if (ss.Length <= 1) continue;
                 var key = ss[0];
                 if (!CaseSensitive)
                 {
